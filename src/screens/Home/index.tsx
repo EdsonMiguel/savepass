@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -13,6 +13,7 @@ import {
   TotalPassCount,
   LoginList,
 } from './styles';
+import { Alert } from 'react-native';
 
 interface LoginDataProps {
   id: string;
@@ -32,17 +33,13 @@ export function Home() {
     const dataKey = '@savepass:logins';
 
     try {
-
       const response = await AsyncStorage.getItem(dataKey);
       const responseFormatted = response ? JSON.parse(response) : [];
-      console.log(responseFormatted)
       setData(responseFormatted);
       setSearchListData(responseFormatted);
-
     } catch (error) {
-      console.log(error);
+      Alert.alert("Não foi possível buscar informações na aplicação")
     }
-  
   }
 
   function handleFilterLoginData() {
@@ -50,24 +47,22 @@ export function Home() {
       setSearchListData(data)
     }else{
       setSearchListData(
-        data.filter(login => login.service_name.includes(searchText) )
+        data.filter(item => item.service_name.includes(searchText) )
       )
     }
-
   }
 
   function handleChangeInputText(text: string) {
     setSearchText(text);
-    if(searchText === ''){
-      setSearchListData(data)
-    }else{
-      handleFilterLoginData();
-    }
   }
 
   useFocusEffect(useCallback(() => {
     loadData();
   }, []));
+
+  useEffect(()=>{
+    handleFilterLoginData();
+  },[searchText])
 
   return (
     <>
