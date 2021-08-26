@@ -8,7 +8,6 @@ import {
   Rubik_500Medium
 } from '@expo-google-fonts/rubik';
 import { NavigationContainer } from '@react-navigation/native';
-
 import { AppRoutes } from './src/routes/app.routes';
 
 export default function App() {
